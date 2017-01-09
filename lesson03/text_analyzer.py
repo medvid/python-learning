@@ -7,7 +7,7 @@ import re
 word_regex = re.compile(r'[\w\d]', re.UNICODE)
 
 # regular expression to detect unicode character
-char_regex = re.compile(r'\w', re.UNICODE)
+char_regex = re.compile(r'^\w$', re.UNICODE)
 
 # regular expression to detect digit or _
 digit_regex = re.compile(r'[0-9_]', re.UNICODE)
@@ -21,36 +21,26 @@ def is_char(token):
     return char_regex.search(token) and not digit_regex.search(token)
 
 def count_words(line):
-    word_count = 0
-    for word in line.split():
-        if (is_word(word)):
-            word_count+=1
-    return word_count
+    return sum(1 for word in line.split() if is_word(word))
 
 def count_chars(line):
-    char_count = 0
-    for char in line:
-        if (is_char(char)):
-            char_count+=1
-    return char_count
+    return sum(1 for char in line if is_char(char))
 
-def process_unique_words(line, word_set, word_dict):
+def process_unique_words(line, word_dict):
     for word in line.split():
         if (is_word(word)):
-            word_set.add(word)
             if word in word_dict:
-                word_dict[word]+=1
+                word_dict[word] += 1
             else:
-                word_dict[word] = 0
+                word_dict[word] = 1
 
-def process_unique_chars(line, char_set, char_dict):
+def process_unique_chars(line, char_dict):
     for char in line:
         if (is_char(char)):
-            char_set.add(char.upper())
             if char in char_dict:
-                char_dict[char]+=1
+                char_dict[char] += 1
             else:
-                char_dict[char] = 0
+                char_dict[char] = 1
 
 def print_top_words(word_dict, count):
     for word in islice(sorted(word_dict, key=word_dict.get, reverse=True), count):
@@ -60,21 +50,19 @@ def print_top_words(word_dict, count):
 def analyze_stream(filestream):
     word_count = 0
     char_count = 0
-    word_set = set()
     word_dict = {}
-    char_set = set()
     char_dict = {}
 
     for line in filestream:
         word_count += count_words(line)
         char_count += count_chars(line)
-        process_unique_words(line, word_set, word_dict)
-        process_unique_chars(line, char_set, char_dict)
+        process_unique_words(line, word_dict)
+        process_unique_chars(line, char_dict)
 
     print("word count: {0}".format(word_count))
     print("character count: {0}".format(char_count))
-    print("unique word count: {0}".format(len(word_set)))
-    print("unique character count: {0}".format(len(char_set)))
+    print("unique word count: {0}".format(len(word_dict)))
+    print("unique character count: {0}".format(len(char_dict)))
     # print(sorted(char_set))
     print("10 most used words:")
     print_top_words(word_dict, 10)
@@ -97,6 +85,6 @@ def benchmark_file(filename):
     print()
 
 if __name__ == "__main__":
+    benchmark_file("../test_files/test.txt")
     benchmark_file("../test_files/bible.txt")
     benchmark_file("../test_files/quran-simple.txt")
-    # benchmark_file("../test_files/test.txt")

@@ -41,10 +41,10 @@ class TestTextAnalyzer(unittest.TestCase):
         self.assertEqual(count_chars(""), 0)
         self.assertEqual(count_chars("A"), 1)
         self.assertEqual(count_chars("тест"), 4)
-        self.assertEqual(count_chars("!zz zz!"), 7)
+        self.assertEqual(count_chars("_zz_zz_"), 4)
 
     def test_process_unique_words(self):
-        words = set()
+        words = {}
         self.assertEqual(len(words), 0)
         process_unique_words("aa bb cc", words)
         self.assertEqual(len(words), 3)
