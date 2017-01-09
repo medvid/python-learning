@@ -44,12 +44,16 @@ class TestTextAnalyzer(unittest.TestCase):
         self.assertEqual(count_chars("_zz_zz_"), 4)
 
     def test_process_unique_words(self):
-        words = {}
-        self.assertEqual(len(words), 0)
-        process_unique_words("aa bb cc", words)
-        self.assertEqual(len(words), 3)
-        process_unique_words("cc dd", words)
-        self.assertEqual(len(words), 4)
+        word_set = set()
+        word_dict = {}
+        self.assertEqual(len(word_set), 0)
+        self.assertEqual(len(word_dict), 0)
+        process_unique_words("aa bb cc", word_set, word_dict)
+        self.assertEqual(len(word_set), 3)
+        self.assertEqual(len(word_dict), 3)
+        process_unique_words("cc CC dd", word_set, word_dict)
+        self.assertEqual(len(word_set), 4)
+        self.assertEqual(len(word_dict), 5)
 
 if __name__ == "__main__":
     unittest.main();

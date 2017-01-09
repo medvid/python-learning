@@ -26,17 +26,19 @@ def count_words(line):
 def count_chars(line):
     return sum(1 for char in line if is_char(char))
 
-def process_unique_words(line, word_dict):
+def process_unique_words(line, word_set, word_dict):
     for word in line.split():
         if (is_word(word)):
+            word_set.add(word.upper())
             if word in word_dict:
                 word_dict[word] += 1
             else:
                 word_dict[word] = 1
 
-def process_unique_chars(line, char_dict):
+def process_unique_chars(line, char_set, char_dict):
     for char in line:
         if (is_char(char)):
+            char_set.add(char.upper())
             if char in char_dict:
                 char_dict[char] += 1
             else:
@@ -50,19 +52,21 @@ def print_top_words(word_dict, count):
 def analyze_stream(filestream):
     word_count = 0
     char_count = 0
+    word_set = set()
+    char_set = set()
     word_dict = {}
     char_dict = {}
 
     for line in filestream:
         word_count += count_words(line)
         char_count += count_chars(line)
-        process_unique_words(line, word_dict)
-        process_unique_chars(line, char_dict)
+        process_unique_words(line, word_set, word_dict)
+        process_unique_chars(line, char_set, char_dict)
 
     print("word count: {0}".format(word_count))
     print("character count: {0}".format(char_count))
-    print("unique word count: {0}".format(len(word_dict)))
-    print("unique character count: {0}".format(len(char_dict)))
+    print("unique word count: {0}".format(len(word_set)))
+    print("unique character count: {0}".format(len(char_set)))
     # print(sorted(char_set))
     print("10 most used words:")
     print_top_words(word_dict, 10)
