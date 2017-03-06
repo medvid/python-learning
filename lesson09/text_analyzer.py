@@ -135,8 +135,6 @@ class TextAnalyzerThread(threading.Thread):
 
 
 
-
-
 def analyze_file(filename, thread_num, line_count):
     with open(filename) as filestream:
         parser = StreamParser(filestream)
@@ -181,7 +179,7 @@ def benchmark_file_single_thread(filename):
         basename(filename),
         getsize(filename) / 1024 / 1024))
     t0 = time()
-    analyze_file_st(filename)
+    analyze_file_single_thread(filename)
     t1 = time()
     print("Time taken: {0:.2f}s".format(t1 - t0))
     print()
@@ -191,4 +189,4 @@ if __name__ == "__main__":
     benchmark_file("../test_files/test.txt")
     benchmark_file("../test_files/bible.txt")
     #benchmark_file("../test_files/quran-simple.txt")
-    #benchmark_file_single_thread("../test_files/bible.txt")
+    benchmark_file_single_thread("../test_files/bible.txt")
