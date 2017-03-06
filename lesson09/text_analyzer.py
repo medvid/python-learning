@@ -133,6 +133,10 @@ class TextAnalyzerThread(threading.Thread):
                 self.__analyzer.analyze_line(line)
         #print("{} exited".format(self.name))
 
+
+
+
+
 def analyze_file(filename, thread_num, line_count):
     with open(filename) as filestream:
         parser = StreamParser(filestream)
@@ -149,6 +153,16 @@ def analyze_file(filename, thread_num, line_count):
         parser.wait()
         total = DataCollector.merge(collectors)
         total.print_stats()
+        
+        
+def analyze_file_single_thread(filename):
+    with open(filename) as filestream:
+        parser = StreamParser(filestream)
+        collector = DataCollector()
+        analyzer = TextAnalyzer(collector)
+        for line in filestream:
+            analyzer.analyze_line(line)
+        collector.print_stats()
 
 
 def benchmark_file(filename):
@@ -160,9 +174,21 @@ def benchmark_file(filename):
     t1 = time()
     print("Time taken: {0:.2f}s".format(t1 - t0))
     print()
+    
+
+def benchmark_file_single_thread(filename):
+    print("analyzing {0} ({1:.1f}M)".format(
+        basename(filename),
+        getsize(filename) / 1024 / 1024))
+    t0 = time()
+    analyze_file_st(filename)
+    t1 = time()
+    print("Time taken: {0:.2f}s".format(t1 - t0))
+    print()
 
 
 if __name__ == "__main__":
     benchmark_file("../test_files/test.txt")
     benchmark_file("../test_files/bible.txt")
-    benchmark_file("../test_files/quran-simple.txt")
+    #benchmark_file("../test_files/quran-simple.txt")
+    #benchmark_file_single_thread("../test_files/bible.txt")
