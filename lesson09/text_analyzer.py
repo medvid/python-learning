@@ -4,8 +4,8 @@ from time import time
 import re
 import threading
 
-NUM_THREADS = 7
-LINES_PER_THREAD = 10000
+NUM_THREADS = 10
+LINES_PER_THREAD = 200000
 
 
 class StreamParser(object):
@@ -131,7 +131,7 @@ class TextAnalyzerThread(threading.Thread):
                     break
                 #print("{}: {}".format(self.name, line))
                 self.__analyzer.analyze_line(line)
-        print("{} exited".format(self.name))
+        #print("{} exited".format(self.name))
 
 def analyze_file(filename, thread_num, line_count):
     with open(filename) as filestream:
